@@ -1,0 +1,5 @@
+package ticketapp
+
+func InitApp() {
+
+}
