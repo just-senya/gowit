@@ -28,23 +28,6 @@ func TestExtract(t *testing.T) {
 		expected   expected
 		errHandler errHandler
 	}{
-		// {
-		// 	name: "empty req-body",
-		// 	args: args{app: fiber.New()},
-		// 	expected: expected{
-		// 		err: errEmptyReqBody,
-		// 	},
-		// },
-		// {
-		// 	name: "invalid req-body",
-		// 	args: args{
-		// 		app:  fiber.New(),
-		// 		body: []byte(`{"invalid-json"}`),
-		// 	},
-		// 	expected: expected{
-		// 		err: nil,
-		// 	},
-		// },
 		{
 			name: "full-body",
 			args: args{

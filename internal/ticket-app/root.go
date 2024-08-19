@@ -13,13 +13,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-const (
-	jsonDbPath = "/Users/arsen/Documents/interview/gowit/repository/data.json"
-)
-
 type App struct {
 	app *fiber.App
-	// config
 }
 
 func NewApp() App {
@@ -28,14 +23,19 @@ func NewApp() App {
 }
 
 func (app App) Register() error {
+	// init Envs
+	InitEnvs()
+	envs := GetEnvs()
 	app.app.Use(recover.New())
 
-	postgresDb, err := postgres.NewPostgresStore()
+	// init DB
+	postgresDb, err := postgres.NewPostgresStore(envs.Host, envs.DbUsername, envs.DbName, envs.DbPassword)
 	if err != nil {
 		return err
 	}
 	postgresDb.Init()
 
+	// create ticket handler
 	extr := ticket_create.NewCreateExtractor()
 	fiestaEvent := ticket_create.NewFiestaEventCreator()
 	respWriter := ticket_create.NewRespWriter()
@@ -45,12 +45,14 @@ func (app App) Register() error {
 		return errors.New("fail to register app: fiestaCreator")
 	}
 
+	// get ticket handler
 	getExtractor := ticket_retrieve.NewTicketRetrieveExtractor()
 	fiestaRetriever := NewFiestaGetProcessor(getExtractor, postgresDb, respWriter)
 	if fiestaRetriever == nil {
 		return errors.New("fail to register app: fiestaRetriever")
 	}
 
+	// make purchase handler
 	purchaseExtractor := purchase.NewPurchaseMakeExtractor()
 	purchaseRespWriter := purchase.NewRespWriter()
 	purchaseMaker := NewPurchaseMakeProcessor(purchaseExtractor, postgresDb, purchaseRespWriter)

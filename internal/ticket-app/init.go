@@ -1,5 +1,0 @@
-package ticketapp
-
-func InitApp() {
-
-}

@@ -30,22 +30,12 @@ type FiestaRetrieveReq interface {
 	GetId() int
 }
 
-type Fiesta interface {
-	FiestaGetter
-	FiestaCreator
-}
-
 type FiestaCreator interface {
 	CreateFiesta(req FrontReq) (model.FiestaInfo, error)
 }
 
 type FiestaGetter interface {
 	GetFiesta()
-}
-
-type RepositoryRW interface {
-	RepositoryReader
-	RepositoryWriter
 }
 
 type RepositoryReader interface {
@@ -69,12 +59,4 @@ type RequestExtractor interface {
 
 type RequestRetrieveExtractor interface {
 	Extract(ctx *fiber.Ctx) (FiestaRetrieveReq, error)
-}
-
-type Sender interface {
-	Send([]byte) error
-}
-
-type Reader interface {
-	Read(query string) ([]byte, error)
 }
