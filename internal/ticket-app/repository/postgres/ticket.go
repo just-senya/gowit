@@ -19,19 +19,15 @@ func (p PostgresDb) Write(fiestaInfo model.FiestaInfo) (int, error) {
 }
 
 func (p PostgresDb) Read(id int) (model.FiestaInfo, error) {
-	res, err := p.db.Query(getTicketQuery, id)
-	if err != nil {
-		return model.FiestaInfo{}, err
-	}
-	var info model.FiestaInfo
-	for res.Next() {
-		info.Id = id
-		res.Scan(
-			&info.Name,
-			&info.Desc,
-			&info.Allocation,
-		)
-	}
+	res := p.db.QueryRow(getTicketQuery, id)
 
-	return info, nil
+	var info model.FiestaInfo
+	info.Id = id
+	err := res.Scan(
+		&info.Name,
+		&info.Desc,
+		&info.Allocation,
+	)
+
+	return info, err
 }

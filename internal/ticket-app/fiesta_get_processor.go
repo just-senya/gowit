@@ -35,7 +35,9 @@ func (f FiestaGetProcessor) Handle(ctx *fiber.Ctx) error {
 	}
 	info, err := f.dataRetriever.Read(extr.GetId())
 	if err != nil {
-		return err
+		ctx.Context().SetStatusCode(http.StatusBadRequest)
+		ctx.Context().SetBody([]byte("no ticket for given id"))
+		return nil
 	}
 
 	f.response.Write(ctx, http.StatusOK, &info)

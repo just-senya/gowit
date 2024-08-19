@@ -35,11 +35,14 @@ func NewFiestaCreateProcessor(
 func (f fiestaCreateProcessor) Handle(ctx *fiber.Ctx) error {
 	tickReq, err := f.extractor.Extract(ctx)
 	if err != nil {
-		return err
+		ctx.Context().SetStatusCode(http.StatusBadRequest)
+		ctx.Context().SetBody([]byte(err.Error()))
+		return nil
 	}
 
 	fiestaInfo, err := f.fiestaCreator.CreateFiesta(tickReq)
 	if err != nil {
+		f.response.Write(ctx, http.StatusInternalServerError, nil)
 		return err
 	}
 
